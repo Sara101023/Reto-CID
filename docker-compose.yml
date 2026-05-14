@@ -1,0 +1,97 @@
+ version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret123
+      POSTGRES_DB: retodb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+
+  create-startup:
+    build: ./services/startups/create
+    environment:
+      DATABASE_URL: postgresql://admin:secret123@db:5432/retodb
+      PORT: 3001
+    depends_on:
+      - db
+
+  read-startup:
+    build: ./services/startups/read
+    environment:
+      DATABASE_URL: postgresql://admin:secret123@db:5432/retodb
+      PORT: 3002
+    depends_on:
+      - db
+
+  update-startup:
+    build: ./services/startups/update
+    environment:
+      DATABASE_URL: postgresql://admin:secret123@db:5432/retodb
+      PORT: 3003
+    depends_on:
+      - db
+
+  delete-startup:
+    build: ./services/startups/delete
+    environment:
+      DATABASE_URL: postgresql://admin:secret123@db:5432/retodb
+      PORT: 3004
+    depends_on:
+      - db
+
+  create-technology:
+    build: ./services/technologies/create
+    environment:
+      DATABASE_URL: postgresql://admin:secret123@db:5432/retodb
+      PORT: 3005
+    depends_on:
+      - db
+
+  read-technology:
+    build: ./services/technologies/read
+    environment:
+      DATABASE_URL: postgresql://admin:secret123@db:5432/retodb
+      PORT: 3006
+    depends_on:
+      - db
+
+  update-technology:
+    build: ./services/technologies/update
+    environment:
+      DATABASE_URL: postgresql://admin:secret123@db:5432/retodb
+      PORT: 3007
+    depends_on:
+      - db
+
+  delete-technology:
+    build: ./services/technologies/delete
+    environment:
+      DATABASE_URL: postgresql://admin:secret123@db:5432/retodb
+      PORT: 3008
+    depends_on:
+      - db
+
+  gateway:
+    build:
+      context: .          # contexto es la raíz del proyecto
+      dockerfile: gateway/Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - create-startup
+      - read-startup
+      - update-startup
+      - delete-startup
+      - create-technology
+      - read-technology
+      - update-technology
+      - delete-technology
+
+volumes:
+  pgdata:
