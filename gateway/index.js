@@ -5,7 +5,11 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.use(cors());
+app.use(cors({
+  origin: ['https://reto-cid-frontend.vercel.app', 'http://localhost:5173'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 const SERVICES = {
@@ -27,7 +31,6 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-// Función proxy genérica
 async function proxy(req, res, serviceUrl, path) {
   try {
     const url = `${serviceUrl}${path}${req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : ''}`;
