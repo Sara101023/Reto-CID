@@ -14,7 +14,10 @@ export default function Startups() {
   const load = async () => {
     setLoading(true)
     try {
-      const res = await api.getStartups(filter)
+      const cleanFilter = Object.fromEntries(
+        Object.entries(filter).filter(([_, v]) => v !== '')
+      )
+      const res = await api.getStartups(cleanFilter)
       setList(res.data)
       setError('')
     } catch {
@@ -72,18 +75,16 @@ export default function Startups() {
 
   return (
     <div style={{ padding: '2rem', maxWidth: '900px', margin: '0 auto' }}>
-      <h1>🚀 Startups</h1>
+      <h1>Startups</h1>
 
-      {/* Filtros */}
       <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
         <input style={inputStyle} placeholder="Buscar por nombre" value={filter.name}
           onChange={e => setFilter(f => ({ ...f, name: e.target.value }))} />
-        <input style={inputStyle} placeholder="Filtrar categoría" value={filter.category}
+        <input style={inputStyle} placeholder="Filtrar categoria" value={filter.category}
           onChange={e => setFilter(f => ({ ...f, category: e.target.value }))} />
         <button style={{ ...btnStyle, background: '#4CAF50', color: 'white' }} onClick={load}>Buscar</button>
       </div>
 
-      {/* Formulario */}
       <div style={{ background: '#f9f9f9', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
         <h3>{editId ? 'Editar Startup' : 'Nueva Startup'}</h3>
         {['name', 'location', 'category'].map(field => (
@@ -115,14 +116,13 @@ export default function Startups() {
         </div>
       </div>
 
-      {/* Lista */}
       {loading ? <p>Cargando...</p> : (
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ background: '#1a1a2e', color: 'white' }}>
               <th style={{ padding: '10px' }}>Nombre</th>
-              <th style={{ padding: '10px' }}>Categoría</th>
-              <th style={{ padding: '10px' }}>Ubicación</th>
+              <th style={{ padding: '10px' }}>Categoria</th>
+              <th style={{ padding: '10px' }}>Ubicacion</th>
               <th style={{ padding: '10px' }}>Funding</th>
               <th style={{ padding: '10px' }}>Acciones</th>
             </tr>

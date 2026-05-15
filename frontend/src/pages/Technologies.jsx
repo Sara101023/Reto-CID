@@ -15,11 +15,14 @@ export default function Technologies() {
   const load = async () => {
     setLoading(true)
     try {
-      const res = await api.getTechnologies(filter)
+      const cleanFilter = Object.fromEntries(
+        Object.entries(filter).filter(([_, v]) => v !== '')
+      )
+      const res = await api.getTechnologies(cleanFilter)
       setList(res.data)
       setError('')
     } catch {
-      setError('Error al cargar tecnologías')
+      setError('Error al cargar tecnologias')
     } finally {
       setLoading(false)
     }
@@ -67,7 +70,7 @@ export default function Technologies() {
 
   return (
     <div style={{ padding: '2rem', maxWidth: '900px', margin: '0 auto' }}>
-      <h1>💻 Technologies</h1>
+      <h1>Technologies</h1>
 
       <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
         <input style={inputStyle} placeholder="Sector" value={filter.sector}
@@ -81,7 +84,7 @@ export default function Technologies() {
       </div>
 
       <div style={{ background: '#f9f9f9', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
-        <h3>{editId ? 'Editar Tecnología' : 'Nueva Tecnología'}</h3>
+        <h3>{editId ? 'Editar Tecnologia' : 'Nueva Tecnologia'}</h3>
         {['name', 'sector', 'description'].map(field => (
           <div key={field} style={{ marginBottom: '8px' }}>
             <input style={inputStyle} placeholder={field}
@@ -115,7 +118,7 @@ export default function Technologies() {
             <tr style={{ background: '#1a1a2e', color: 'white' }}>
               <th style={{ padding: '10px' }}>Nombre</th>
               <th style={{ padding: '10px' }}>Sector</th>
-              <th style={{ padding: '10px' }}>Adopción</th>
+              <th style={{ padding: '10px' }}>Adopcion</th>
               <th style={{ padding: '10px' }}>Acciones</th>
             </tr>
           </thead>
