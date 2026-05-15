@@ -5,7 +5,7 @@ const { Pool } = require('pg');
 const app = express();
 app.use(express.json());
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL, SSL: { REJECTUNAUTHORIZED: FALSE } });
+const pool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
 
 // Health check
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
