@@ -1,105 +1,64 @@
 const express = require('express');
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const axios = require('axios');
 const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Ruta principal (para que no de Cannot GET /)
-app.get('/', (req, res) => {
-    res.json({
-        message: 'API Gateway funcionando correctamente',
-        status: 'online',
-        endpoints: {
-            startups: {
-                create: '/api/startups/create',
-                read: '/api/startups/read',
-                update: '/api/startups/update',
-                delete: '/api/startups/delete'
-            },
-            technologies: {
-                create: '/api/technologies/create',
-                read: '/api/technologies/read',
-                update: '/api/technologies/update',
-                delete: '/api/technologies/delete'
-            }
-        }
-    });
-});
-
-// Health check
-app.get('/health', (req, res) => {
-    res.json({ status: 'healthy', timestamp: new Date().toISOString() });
-});
-
-// URLs de tus microservicios en Render
 const SERVICES = {
-    'startups-create': 'https://startups-create.onrender.com',
-    'startups-read': 'https://startups-read.onrender.com',
-    'startups-update': 'https://startups-update.onrender.com',
-    'startups-delete': 'https://startups-delete.onrender.com',
-    'techs-create': 'https://techs-create.onrender.com',
-    'techs-read': 'https://techs-read.onrender.com',
-    'techs-update': 'https://techs-update.onrender.com',
-    'techs-delete': 'https://techs-delete.onrender.com'
+  'startups-create': 'https://startups-create.onrender.com',
+  'startups-read':   'https://startups-read.onrender.com',
+  'startups-update': 'https://startups-update.onrender.com',
+  'startups-delete': 'https://startups-delete.onrender.com',
+  'techs-create':    'https://techs-create.onrender.com',
+  'techs-read':      'https://techs-read.onrender.com',
+  'techs-update':    'https://techs-update.onrender.com',
+  'techs-delete':    'https://techs-delete.onrender.com'
 };
 
-// Proxy para Startups
-app.use('/api/startups/create', createProxyMiddleware({
-    target: SERVICES['startups-create'],
-    changeOrigin: true,
-    pathRewrite: { '^/api/startups/create': '' }
-}));
-
-app.use('/api/startups/read', createProxyMiddleware({
-    target: SERVICES['startups-read'],
-    changeOrigin: true,
-    pathRewrite: { '^/api/startups/read': '' }
-}));
-
-app.use('/api/startups/update', createProxyMiddleware({
-    target: SERVICES['startups-update'],
-    changeOrigin: true,
-    pathRewrite: { '^/api/startups/update': '' }
-}));
-
-app.use('/api/startups/delete', createProxyMiddleware({
-    target: SERVICES['startups-delete'],
-    changeOrigin: true,
-    pathRewrite: { '^/api/startups/delete': '' }
-}));
-
-// Proxy para Technologies
-app.use('/api/technologies/create', createProxyMiddleware({
-    target: SERVICES['techs-create'],
-    changeOrigin: true,
-    pathRewrite: { '^/api/technologies/create': '' }
-}));
-
-app.use('/api/technologies/read', createProxyMiddleware({
-    target: SERVICES['techs-read'],
-    changeOrigin: true,
-    pathRewrite: { '^/api/technologies/read': '' }
-}));
-
-app.use('/api/technologies/update', createProxyMiddleware({
-    target: SERVICES['techs-update'],
-    changeOrigin: true,
-    pathRewrite: { '^/api/technologies/update': '' }
-}));
-
-app.use('/api/technologies/delete', createProxyMiddleware({
-    target: SERVICES['techs-delete'],
-    changeOrigin: true,
-    pathRewrite: { '^/api/technologies/delete': '' }
-}));
-
-// Iniciar servidor
-app.listen(PORT, () => {
-    console.log(`✅ API Gateway running on port ${PORT}`);
-    console.log(`📡 Prueba en: https://gateway.onrender.com`);
+app.get('/', (req, res) => {
+  res.json({ status: 'gateway ok' });
 });
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
+// Función proxy genérica
+async function proxy(req, res, serviceUrl, path) {
+  try {
+    const url = `${serviceUrl}${path}${req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : ''}`;
+    const response = await axios({
+      method: req.method,
+      url,
+      data: req.body,
+      params: req.query,
+      timeout: 60000,
+      headers: { 'Content-Type': 'application/json' }
+    });
+    res.status(response.status).json(response.data);
+  } catch (err) {
+    const status = err.response?.status || 500;
+    const data = err.response?.data || { message: err.message };
+    res.status(status).json(data);
+  }
+}
+
+// Startups
+app.all('/api/startups/create',     (req, res) => proxy(req, res, SERVICES['startups-create'], '/'));
+app.all('/api/startups/read',       (req, res) => proxy(req, res, SERVICES['startups-read'], '/'));
+app.all('/api/startups/read/:id',   (req, res) => proxy(req, res, SERVICES['startups-read'], `/${req.params.id}`));
+app.all('/api/startups/update/:id', (req, res) => proxy(req, res, SERVICES['startups-update'], `/${req.params.id}`));
+app.all('/api/startups/delete/:id', (req, res) => proxy(req, res, SERVICES['startups-delete'], `/${req.params.id}`));
+
+// Technologies
+app.all('/api/technologies/create',     (req, res) => proxy(req, res, SERVICES['techs-create'], '/'));
+app.all('/api/technologies/read',       (req, res) => proxy(req, res, SERVICES['techs-read'], '/'));
+app.all('/api/technologies/read/:id',   (req, res) => proxy(req, res, SERVICES['techs-read'], `/${req.params.id}`));
+app.all('/api/technologies/update/:id', (req, res) => proxy(req, res, SERVICES['techs-update'], `/${req.params.id}`));
+app.all('/api/technologies/delete/:id', (req, res) => proxy(req, res, SERVICES['techs-delete'], `/${req.params.id}`));
+
+app.listen(PORT, () => console.log(`Gateway corriendo en puerto ${PORT}`));
