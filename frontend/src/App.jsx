@@ -1,4 +1,5 @@
- import { Routes, Route, Link } from 'react-router-dom'
+import React from 'react'  // ← Agrega esta línea al principio
+import { Routes, Route, Link } from 'react-router-dom'
 import Startups from './pages/Startups'
 import Technologies from './pages/Technologies'
 
