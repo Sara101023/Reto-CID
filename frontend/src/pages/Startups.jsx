@@ -92,7 +92,7 @@ export default function Startups() {
     setEditId(Number(s.id))
     setForm({
       name: s.name || '',
-      foundedAt: s.founded_at?.split('T')[0] || '',
+      foundedAt: s.founded_at ? s.founded_at.split('T')[0] : '',
       location: s.location || '',
       category: s.category || '',
       fundingAmount: s.funding_amount || ''
