@@ -51,11 +51,12 @@ export default function Startups() {
   const [loading, setLoading] = useState(false)
   const [filter, setFilter] = useState({ name: '', category: '' })
 
-  const load = async () => {
+  const load = async (customFilter) => {
     setLoading(true)
     setList([])
     try {
-      const cleanFilter = Object.fromEntries(Object.entries(filter).filter(([_, v]) => v !== ''))
+      const activeFilter = customFilter !== undefined ? customFilter : filter
+      const cleanFilter = Object.fromEntries(Object.entries(activeFilter).filter(([_, v]) => v !== ''))
       const res = await api.getStartups(cleanFilter)
       setList(res.data)
     } catch {
@@ -135,7 +136,11 @@ export default function Startups() {
             Buscar
           </button>
           <button style={{ ...btnPrimary, background: '#e0e7ef', color: '#5a6a85', boxShadow: 'none' }}
-            onClick={() => { setFilter({ name: '', category: '' }); setTimeout(load, 50) }}>
+            onClick={() => {
+              const empty = { name: '', category: '' }
+              setFilter(empty)
+              load(empty)
+            }}>
             Limpiar
           </button>
         </div>

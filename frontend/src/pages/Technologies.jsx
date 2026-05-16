@@ -51,19 +51,20 @@ export default function Technologies() {
   const [loading, setLoading] = useState(false)
   const [filter, setFilter] = useState({ sector: '', adoptionLevel: '' })
 
-  const load = async () => {
-    setLoading(true)
-    setList([])
-    try {
-      const cleanFilter = Object.fromEntries(Object.entries(filter).filter(([_, v]) => v !== ''))
-      const res = await api.getTechnologies(cleanFilter)
-      setList(res.data)
-    } catch {
-      showToast('Error al cargar tecnologias', 'error')
-    } finally {
-      setLoading(false)
-    }
+  const load = async (customFilter) => {
+  setLoading(true)
+  setList([])
+  try {
+    const activeFilter = customFilter !== undefined ? customFilter : filter
+    const cleanFilter = Object.fromEntries(Object.entries(activeFilter).filter(([_, v]) => v !== ''))
+    const res = await api.getTechnologies(cleanFilter)
+    setList(res.data)
+  } catch {
+    showToast('Error al cargar tecnologias', 'error')
+  } finally {
+    setLoading(false)
   }
+}
 
   useEffect(() => { load() }, [])
 
@@ -132,9 +133,13 @@ export default function Technologies() {
     Buscar
   </button>
   <button style={{ ...btnPrimary, background: '#e0e7ef', color: '#5a6a85', boxShadow: 'none' }}
-    onClick={() => { setFilter({ sector: '', adoptionLevel: '' }); setTimeout(load, 50) }}>
-    Limpiar
-  </button>
+  onClick={() => {
+    const empty = { sector: '', adoptionLevel: '' }
+    setFilter(empty)
+    load(empty)
+  }}>
+  Limpiar
+</button>
 </div>
       </div>
 
