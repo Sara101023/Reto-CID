@@ -13,11 +13,11 @@ app.put('/:id', async (req, res) => {
   const updates = [];
   const values = [];
 
-  // Solo permite campos definidos
   for (const key of allowed) {
     if (req.body[key] !== undefined) {
       const dbKey = key === 'foundedAt' ? 'founded_at' : key === 'fundingAmount' ? 'funding_amount' : key;
-      values.push(req.body[key]);
+      const val = req.body[key];
+      values.push((key === 'foundedAt' && val === '') ? null : val);
       updates.push(`${dbKey} = $${values.length}`);
     }
   }
