@@ -134,6 +134,10 @@ export default function Startups() {
           <button style={{ ...btnPrimary, background: 'linear-gradient(135deg, #00b09b, #1565c0)' }} onClick={load}>
             Buscar
           </button>
+          <button style={{ ...btnPrimary, background: '#e0e7ef', color: '#5a6a85', boxShadow: 'none' }}
+            onClick={() => { setFilter({ name: '', category: '' }); setTimeout(load, 50) }}>
+            Limpiar
+          </button>
         </div>
       </div>
 

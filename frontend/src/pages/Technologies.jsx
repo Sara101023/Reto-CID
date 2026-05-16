@@ -121,17 +121,21 @@ export default function Technologies() {
           🔍 Filtros
         </p>
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          <input style={{ ...inputStyle, flex: 1, minWidth: '160px' }} placeholder="Sector"
-            value={filter.sector} onChange={e => setFilter(f => ({ ...f, sector: e.target.value }))} />
-          <select style={{ ...inputStyle, flex: 1, minWidth: '160px' }} value={filter.adoptionLevel}
-            onChange={e => setFilter(f => ({ ...f, adoptionLevel: e.target.value }))}>
-            <option value="">Todos los niveles</option>
-            {levels.map(l => <option key={l} value={l}>{l}</option>)}
-          </select>
-          <button style={{ ...btnPrimary, background: 'linear-gradient(135deg, #00b09b, #1565c0)' }} onClick={load}>
-            Buscar
-          </button>
-        </div>
+  <input style={{ ...inputStyle, flex: 1, minWidth: '160px' }} placeholder="Sector"
+    value={filter.sector} onChange={e => setFilter(f => ({ ...f, sector: e.target.value }))} />
+  <select style={{ ...inputStyle, flex: 1, minWidth: '160px' }} value={filter.adoptionLevel}
+    onChange={e => setFilter(f => ({ ...f, adoptionLevel: e.target.value }))}>
+    <option value="">Todos los niveles</option>
+    {levels.map(l => <option key={l} value={l}>{l}</option>)}
+  </select>
+  <button style={{ ...btnPrimary, background: 'linear-gradient(135deg, #00b09b, #1565c0)' }} onClick={load}>
+    Buscar
+  </button>
+  <button style={{ ...btnPrimary, background: '#e0e7ef', color: '#5a6a85', boxShadow: 'none' }}
+    onClick={() => { setFilter({ sector: '', adoptionLevel: '' }); setTimeout(load, 50) }}>
+    Limpiar
+  </button>
+</div>
       </div>
 
       <div style={{ ...card, border: editId ? '2px solid #1565c0' : '2px solid transparent' }}>
