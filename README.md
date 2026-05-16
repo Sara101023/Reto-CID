@@ -372,6 +372,15 @@
  
  ### Actualizacones
  ![Update](docs/StartupUpdate.png)
+
+ ### Postman - GET /v1/api/startups/read
+![Postman Read](docs/postman-startups-read.png)
+
+### Postman - POST /v1/api/startups/create (201 Created)
+![Postman Create](docs/postman-startups-create.png)
+
+### Postman - GET /status (servicios activos)
+![Postman Status](docs/postman-status.png)
  
  ---
  
