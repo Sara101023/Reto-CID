@@ -33,10 +33,9 @@ app.get('/health', (req, res) => {
 
 async function proxy(req, res, serviceUrl, path) {
   try {
-    const url = `${serviceUrl}${path}${req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : ''}`;
     const response = await axios({
       method: req.method,
-      url,
+      url: `${serviceUrl}${path}`,
       data: req.body,
       params: req.query,
       timeout: 60000,
