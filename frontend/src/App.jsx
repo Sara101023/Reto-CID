@@ -81,7 +81,7 @@ export default function App() {
             background: 'rgba(255,255,255,0.2)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '1.2rem'
-          }}>🚀</div>
+          }}>💡</div>
           <span style={{ color: 'white', fontWeight: '800', fontSize: '1.1rem', letterSpacing: '-0.02em' }}>
             Reto CID
           </span>
