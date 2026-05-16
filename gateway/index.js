@@ -24,7 +24,10 @@ const SERVICES = {
 };
 
 app.get('/', (req, res) => {
-  res.json({ status: 'gateway ok' });
+  res.json({ status: 'gateway ok', version: 'v1', endpoints: {
+    startups: '/v1/api/startups/create|read|update|delete',
+    technologies: '/v1/api/technologies/create|read|update|delete'
+  }});
 });
 
 app.get('/health', (req, res) => {
@@ -50,17 +53,17 @@ async function proxy(req, res, serviceUrl, path) {
 }
 
 // Startups
-app.all('/api/startups/create',     (req, res) => proxy(req, res, SERVICES['startups-create'], '/'));
-app.all('/api/startups/read',       (req, res) => proxy(req, res, SERVICES['startups-read'], '/'));
-app.all('/api/startups/read/:id',   (req, res) => proxy(req, res, SERVICES['startups-read'], `/${req.params.id}`));
-app.all('/api/startups/update/:id', (req, res) => proxy(req, res, SERVICES['startups-update'], `/${req.params.id}`));
-app.all('/api/startups/delete/:id', (req, res) => proxy(req, res, SERVICES['startups-delete'], `/${req.params.id}`));
+app.all('/v1/api/startups/create',     (req, res) => proxy(req, res, SERVICES['startups-create'], '/'));
+app.all('/v1/api/startups/read',       (req, res) => proxy(req, res, SERVICES['startups-read'], '/'));
+app.all('/v1/api/startups/read/:id',   (req, res) => proxy(req, res, SERVICES['startups-read'], `/${req.params.id}`));
+app.all('/v1/api/startups/update/:id', (req, res) => proxy(req, res, SERVICES['startups-update'], `/${req.params.id}`));
+app.all('/v1/api/startups/delete/:id', (req, res) => proxy(req, res, SERVICES['startups-delete'], `/${req.params.id}`));
 
 // Technologies
-app.all('/api/technologies/create',     (req, res) => proxy(req, res, SERVICES['techs-create'], '/'));
-app.all('/api/technologies/read',       (req, res) => proxy(req, res, SERVICES['techs-read'], '/'));
-app.all('/api/technologies/read/:id',   (req, res) => proxy(req, res, SERVICES['techs-read'], `/${req.params.id}`));
-app.all('/api/technologies/update/:id', (req, res) => proxy(req, res, SERVICES['techs-update'], `/${req.params.id}`));
-app.all('/api/technologies/delete/:id', (req, res) => proxy(req, res, SERVICES['techs-delete'], `/${req.params.id}`));
+app.all('/v1/api/technologies/create',     (req, res) => proxy(req, res, SERVICES['techs-create'], '/'));
+app.all('/v1/api/technologies/read',       (req, res) => proxy(req, res, SERVICES['techs-read'], '/'));
+app.all('/v1/api/technologies/read/:id',   (req, res) => proxy(req, res, SERVICES['techs-read'], `/${req.params.id}`));
+app.all('/v1/api/technologies/update/:id', (req, res) => proxy(req, res, SERVICES['techs-update'], `/${req.params.id}`));
+app.all('/v1/api/technologies/delete/:id', (req, res) => proxy(req, res, SERVICES['techs-delete'], `/${req.params.id}`));
 
 app.listen(PORT, () => console.log(`Gateway corriendo en puerto ${PORT}`));
