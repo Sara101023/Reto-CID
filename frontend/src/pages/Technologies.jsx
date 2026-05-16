@@ -53,6 +53,7 @@ export default function Technologies() {
 
   const load = async () => {
     setLoading(true)
+    setList([])
     try {
       const cleanFilter = Object.fromEntries(Object.entries(filter).filter(([_, v]) => v !== ''))
       const res = await api.getTechnologies(cleanFilter)
@@ -106,8 +107,6 @@ export default function Technologies() {
 
   return (
     <div style={{ padding: '2rem', maxWidth: '960px', margin: '0 auto' }}>
-
-      {/* Header */}
       <div style={{ marginBottom: '2rem' }}>
         <h1 style={{ fontSize: '2rem', fontWeight: '800', color: '#0d47a1', letterSpacing: '-0.03em' }}>
           💻 Technologies
@@ -117,7 +116,6 @@ export default function Technologies() {
         </p>
       </div>
 
-      {/* Filtros */}
       <div style={{ ...card }}>
         <p style={{ fontWeight: '700', color: '#1565c0', marginBottom: '1rem', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
           🔍 Filtros
@@ -136,7 +134,6 @@ export default function Technologies() {
         </div>
       </div>
 
-      {/* Formulario */}
       <div style={{ ...card, border: editId ? '2px solid #1565c0' : '2px solid transparent' }}>
         <p style={{ fontWeight: '700', color: '#1565c0', marginBottom: '1rem', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
           {editId ? '✏️ Editar Tecnología' : '➕ Nueva Tecnología'}
@@ -167,7 +164,6 @@ export default function Technologies() {
         </div>
       </div>
 
-      {/* Tabla */}
       <div style={{ ...card, padding: 0, overflow: 'hidden' }}>
         <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid #f0f4ff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <p style={{ fontWeight: '700', color: '#1565c0', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>

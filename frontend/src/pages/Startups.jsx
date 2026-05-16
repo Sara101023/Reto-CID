@@ -53,6 +53,7 @@ export default function Startups() {
 
   const load = async () => {
     setLoading(true)
+    setList([])
     try {
       const cleanFilter = Object.fromEntries(Object.entries(filter).filter(([_, v]) => v !== ''))
       const res = await api.getStartups(cleanFilter)
@@ -90,8 +91,10 @@ export default function Startups() {
   const handleEdit = (s) => {
     setEditId(s.id)
     setForm({
-      name: s.name || '', foundedAt: s.founded_at?.split('T')[0] || '',
-      location: s.location || '', category: s.category || '',
+      name: s.name || '',
+      foundedAt: s.founded_at?.split('T')[0] || '',
+      location: s.location || '',
+      category: s.category || '',
       fundingAmount: s.funding_amount || ''
     })
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -110,8 +113,6 @@ export default function Startups() {
 
   return (
     <div style={{ padding: '2rem', maxWidth: '960px', margin: '0 auto' }}>
-
-      {/* Header */}
       <div style={{ marginBottom: '2rem' }}>
         <h1 style={{ fontSize: '2rem', fontWeight: '800', color: '#0d47a1', letterSpacing: '-0.03em' }}>
           🚀 Startups
@@ -121,7 +122,6 @@ export default function Startups() {
         </p>
       </div>
 
-      {/* Filtros */}
       <div style={{ ...card }}>
         <p style={{ fontWeight: '700', color: '#1565c0', marginBottom: '1rem', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
           🔍 Filtros
@@ -137,7 +137,6 @@ export default function Startups() {
         </div>
       </div>
 
-      {/* Formulario */}
       <div style={{ ...card, border: editId ? '2px solid #1565c0' : '2px solid transparent' }}>
         <p style={{ fontWeight: '700', color: '#1565c0', marginBottom: '1rem', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
           {editId ? '✏️ Editar Startup' : '➕ Nueva Startup'}
@@ -165,7 +164,6 @@ export default function Startups() {
         </div>
       </div>
 
-      {/* Tabla */}
       <div style={{ ...card, padding: 0, overflow: 'hidden' }}>
         <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid #f0f4ff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <p style={{ fontWeight: '700', color: '#1565c0', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
