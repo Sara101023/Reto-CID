@@ -89,7 +89,7 @@ export default function Startups() {
   }
 
   const handleEdit = (s) => {
-    setEditId(s.id)
+    setEditId(Number(s.id))
     setForm({
       name: s.name || '',
       foundedAt: s.founded_at?.split('T')[0] || '',
