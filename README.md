@@ -389,25 +389,13 @@
  
  ---
  
- ## Criterios de Evaluación
- 
- | Criterio | Peso | Estado |
- |---------|------|--------|
- | Funcionamiento (CRUDs) | 30% | Completo |
- | Código y orden | 25% | Completo |
- | Contenedores y despliegue | 20% | Completo |
- | Documentación y reproducibilidad | 15% | Completo |
- | Pruebas manuales claras | 10% | Completo |
- | Plus (extras) | +10% | UI moderna con notificaciones |
- 
- ---
+
  
  ## Limitaciones Conocidas
  
  - **Cold starts:** Los servicios en Render plan gratuito se duermen tras 15 minutos de inactividad. La primera petición puede tardar entre 30 y 50 segundos en despertar el servicio.
  - **Sin autenticación:** El reto no requiere JWT; los endpoints son públicos.
  - **Seed manual:** No existe un script automático de datos iniciales. Para poblar la base de datos se deben usar los endpoints de creación o ejecutar `db/init.sql` directamente en pgAdmin.
- - **Prefijo `/v1` no implementado:** El reto sugiere prefijo `/v1/api` en el gateway, pero se optó por `/api` directamente para simplificar el despliegue en Render.
  - **Botón "Limpiar" requiere doble clic:** Por la naturaleza asíncrona del estado en React, el botón Limpiar del filtro necesita dos clics para resetear completamente los resultados. Solución futura: refactorizar con `useCallback` o `useRef`.
  
  ---
@@ -416,7 +404,6 @@
  
  - Agregar autenticación JWT en el gateway
  - Implementar rate limiting por IP
- - Agregar prefijo `/v1` en todas las rutas del gateway
  - Agregar tests automatizados con Jest
  - Migrar a plan pago en Render para eliminar los cold starts
  
