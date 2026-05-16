@@ -34,6 +34,23 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
+app.get('/status', async (req, res) => {
+  const checks = await Promise.allSettled([
+    axios.get(`${SERVICES['startups-read']}/health`, { timeout: 5000 }),
+    axios.get(`${SERVICES['techs-read']}/health`, { timeout: 5000 })
+  ])
+
+  const allUp = checks.every(c => c.status === 'fulfilled')
+
+  res.status(allUp ? 200 : 503).json({
+    status: allUp ? 'ok' : 'degraded',
+    services: {
+      'startups-read': checks[0].status === 'fulfilled' ? 'up' : 'down',
+      'techs-read': checks[1].status === 'fulfilled' ? 'up' : 'down'
+    }
+  })
+})
+
 async function proxy(req, res, serviceUrl, path) {
   try {
     const response = await axios({
